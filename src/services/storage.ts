@@ -1,5 +1,6 @@
 import * as fs from "fs/promises";
 import * as path from "path";
+import sharp from "sharp";
 import type { TestResult } from "../types/index.js";
 
 const TEST_RESULTS_DIR = path.join(process.cwd(), "test-results");
@@ -82,10 +83,11 @@ export async function saveScreenshot(
   await ensureDirectories();
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const filename = `${issueId}-${timestamp}-${index}.png`;
+  const filename = `${issueId}-${timestamp}-${index}.webp`;
   const filepath = path.join(SCREENSHOTS_DIR, filename);
 
-  await fs.writeFile(filepath, screenshotData);
+  const webpBuffer = await sharp(screenshotData).webp({ quality: 65 }).toBuffer();
+  await fs.writeFile(filepath, webpBuffer);
 
   console.log(`[Storage] Screenshot saved to ${filepath}`);
   return filepath;
@@ -99,7 +101,7 @@ export async function deleteScreenshotsForIssue(issueId: string): Promise<number
 
   const files = await fs.readdir(SCREENSHOTS_DIR);
   const issueScreenshots = files.filter(
-    (f) => f.startsWith(issueId) && f.endsWith(".png")
+    (f) => f.startsWith(issueId) && (f.endsWith(".webp") || f.endsWith(".png"))
   );
 
   let deletedCount = 0;

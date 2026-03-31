@@ -1,4 +1,4 @@
-# Linear Stagehand Tests
+# Stagehand Tester
 
 Automated testing infrastructure that runs browser tests when Linear tickets are moved to a testing state. Powered by [Stagehand](https://github.com/browserbase/stagehand) for AI-driven browser automation.
 
@@ -260,7 +260,7 @@ The server uses a queue system to manage concurrent test execution:
 ## Project Structure
 
 ```
-linear-stagehand-tests/
+stagehand-tester/
 ├── src/
 │   ├── index.ts              # Express server entry
 │   ├── routes/
